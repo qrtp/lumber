@@ -115,7 +115,6 @@ func (l *FileLogger) startOutput() {
 		m, ok := <-l.queue
 		if !ok {
 			// the channel is closed and empty
-			l.printLog(&Message{len(l.levels) - 1, fmt.Sprintf("Closing log now"), time.Now()})
 			l.out.Sync()
 			if err := l.out.Close(); err != nil {
 				l.printLog(&Message{len(l.levels) - 1, fmt.Sprintf("Error closing log file: %s", err), time.Now()})
@@ -221,9 +220,6 @@ func (l *FileLogger) printLog(msg *Message) {
 		buf = append(buf, ' ')
 		buf = append(buf, l.prefix...)
 	}
-	buf = append(buf, ' ')
-	buf = append(buf, l.levels[msg.level]...)
-	buf = append(buf, ' ')
 	buf = append(buf, msg.m...)
 	if len(msg.m) > 0 && msg.m[len(msg.m)-1] != '\n' {
 		buf = append(buf, '\n')
